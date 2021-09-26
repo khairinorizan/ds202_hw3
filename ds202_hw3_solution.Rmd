@@ -9,22 +9,38 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Question 1
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r, echo=FALSE}
+library(classdata)
+data(ames)
+?ames
 ```
 
-## Including Plots
+### Question 1
 
-You can also embed plots, for example:
+Explore and explain what is the relationship between the sales price (y) and living area size (x). In your visualization, add a straight line with intercept at 20000 and slope equal to 1000. Look at `?geom_abline`, and in particular the examples. Remark on any patterns you find and the straight line. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+### Question 2
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Describe at least two types of anomalies in the previous plot. What do they mean?
+
+### Question 3
+
+Visualize the number of sales by the overall condition. Make sure the conditions are ordered from the best to the worst. What do you find?
+
+### Question 4
+
+Introduce a variable `houseAge` into the data set which stands for the age of the house at the time when it was sold. How does the age of the house affect the sale price?
+
+### Question 5
+
+Were there more sales of nice houses or poor houses? Make sure to state your criterion for a house to be "nice" or otherwise "poor". Choose an appropriate graph type.
+
+### Question 6
+
+How do the neighborhood and the slope of property affect the relationship between sale price and year built? Focus on the neighborhoods of Brookside, Clear Creek, College Creek, and Somerset only. Find a visualization that incorporates all four variables. Interpret the result.
+
+### Question 7
+
+Create a side-by-side histogram showing the sales prices for the differemt types of buildings. Comment on the result.
+
+
