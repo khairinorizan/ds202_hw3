@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r, echo=FALSE}
 library(classdata)
+library(ggplot2)
 data(ames)
 ?ames
 ```
@@ -18,6 +19,12 @@ data(ames)
 ### Question 1
 
 Explore and explain what is the relationship between the sales price (y) and living area size (x). In your visualization, add a straight line with intercept at 20000 and slope equal to 1000. Look at `?geom_abline`, and in particular the examples. Remark on any patterns you find and the straight line. 
+
+```{r, echo=FALSE}
+ggplot(ames, aes(x=GrLivArea, y=SalePrice)) + 
+  geom_point() + 
+  geom_abline(intercept = 20000, slope = 1000)
+```
 
 ### Question 2
 
@@ -27,20 +34,50 @@ Describe at least two types of anomalies in the previous plot. What do they mean
 
 Visualize the number of sales by the overall condition. Make sure the conditions are ordered from the best to the worst. What do you find?
 
+```{r, echo=FALSE}
+newAmesData <- ames[order(-ames$OverallCond),]
+ggplot(newAmesData, aes(x=OverallCond, weight=SalePrice)) + geom_bar()
+```
+
 ### Question 4
 
 Introduce a variable `houseAge` into the data set which stands for the age of the house at the time when it was sold. How does the age of the house affect the sale price?
+
+```{r, echo=FALSE}
+ames$houseAge <- floor(ames$YrSold - ames$YearBuilt)
+
+ggplot(ames, aes(x=houseAge, y=SalePrice)) + 
+  geom_point()
+```
 
 ### Question 5
 
 Were there more sales of nice houses or poor houses? Make sure to state your criterion for a house to be "nice" or otherwise "poor". Choose an appropriate graph type.
 
+```{r, echo=FALSE}
+ames$PoorOrNice <- ifelse (ames$OverallQual <= 5, 'Poor', 'Nice')
+
+ggplot() + geom_col(data = ames, aes(x = PoorOrNice, y = SalePrice))
+#barplot(counts, main="Total sales ",
+#  xlab="Number of Gears", col=c("darkblue","red"),
+#  legend = rownames(counts), beside=TRUE)
+```
+
 ### Question 6
 
 How do the neighborhood and the slope of property affect the relationship between sale price and year built? Focus on the neighborhoods of Brookside, Clear Creek, College Creek, and Somerset only. Find a visualization that incorporates all four variables. Interpret the result.
 
+```{r, echo=FALSE}
+newAmesData <- ames[ames$Neighborhood %in% c('BrkSide', 'ClearCr', 'CollgCr', 'Somerst'), ]
+
+#ggplot() + geom_col(data = newAmesData, aes(x = Neighborhood, y = SalePrice))
+boxplot(SalePrice~Neighborhood,data=newAmesData)
+```
+
 ### Question 7
 
-Create a side-by-side histogram showing the sales prices for the differemt types of buildings. Comment on the result.
+Create a side-by-side histogram showing the sales prices for the different types of buildings. Comment on the result.
 
-
+```{r, echo=FALSE}
+boxplot(SalePrice~BldgType,data=ames)
+```
