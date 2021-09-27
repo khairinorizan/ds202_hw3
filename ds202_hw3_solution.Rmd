@@ -25,6 +25,8 @@ ggplot(ames, aes(x=GrLivArea, y=SalePrice)) +
   geom_point() + 
   geom_abline(intercept = 20000, slope = 1000)
 ```
+\
+From the graph above, we can see that there are more houses with living area size range between 1000 - 2000 and lesser houses for living area size more than 3000. The graph also explains that, the lower the living area, the lower the price. 
 
 ### Question 2
 
@@ -36,19 +38,32 @@ Visualize the number of sales by the overall condition. Make sure the conditions
 
 ```{r, echo=FALSE}
 newAmesData <- ames[order(-ames$OverallCond),]
-ggplot(newAmesData, aes(x=OverallCond, weight=SalePrice)) + geom_bar()
+ggplot(newAmesData, aes(x=OverallCond)) + geom_bar()
 ```
+\
+From the above graph, it is obvious that houses with mid-condition have highest overall number of sales. Not only that, but houses with a low overall condition range between 2.5 to 4 have the lowest number of sales. This is not surprising and it is expected that this kind of condition will have a lower sales price. On the other hand, house overall condition from range between 5 to 10 have the higher number of sales.
 
 ### Question 4
 
 Introduce a variable `houseAge` into the data set which stands for the age of the house at the time when it was sold. How does the age of the house affect the sale price?
 
 ```{r, echo=FALSE}
-ames$houseAge <- floor(ames$YrSold - ames$YearBuilt)
+ames$houseAge <- ames$YrSold - ames$YearBuilt
 
-ggplot(ames, aes(x=houseAge, y=SalePrice)) + 
-  geom_point()
+newAmesData <- ames[order(-ames$houseAge,ames$SalePrice),]
+
+ggplot(data=newAmesData, aes(x=houseAge, y=SalePrice, group=1)) +
+  geom_line(color="red")
 ```
+\
+Looking at the correlation:
+```{r, echo=FALSE}
+print(cor(ames$houseAge,ames$SalePrice, method="pearson"))
+```
+
+The correlation between variable `houseAge` and `SalePrice` have a negative correlation. It means that, when the `houseAge` increases, the `SalePrice` decreases. However, the correlation between these two variables is not strong enough which is explained in the graph above. 
+
+The graph above shows that there's a slight decrease when the house age increase. However, if it is not 100% true for all. The graph also shows that there's high sales price when the house is older, especially when the house is more than 100 years old. Hence, that explained the correlation between the variable `houseAge` and `SalesPrice`.
 
 ### Question 5
 
@@ -57,11 +72,10 @@ Were there more sales of nice houses or poor houses? Make sure to state your cri
 ```{r, echo=FALSE}
 ames$PoorOrNice <- ifelse (ames$OverallQual <= 5, 'Poor', 'Nice')
 
-ggplot() + geom_col(data = ames, aes(x = PoorOrNice, y = SalePrice))
-#barplot(counts, main="Total sales ",
-#  xlab="Number of Gears", col=c("darkblue","red"),
-#  legend = rownames(counts), beside=TRUE)
+ggplot(ames, aes(x=PoorOrNice)) + geom_bar()
 ```
+\
+The graph above shows that nice houses have a higher number of sales compared to the poor houses. What is the criterion for nice and poor house? In this case, nice houses is classified as a house that have Overall Quality socre above 5. On the other hand, poor houses are classified as a house that have Overall Quality score 5 and below.
 
 ### Question 6
 
@@ -70,9 +84,10 @@ How do the neighborhood and the slope of property affect the relationship betwee
 ```{r, echo=FALSE}
 newAmesData <- ames[ames$Neighborhood %in% c('BrkSide', 'ClearCr', 'CollgCr', 'Somerst'), ]
 
-#ggplot() + geom_col(data = newAmesData, aes(x = Neighborhood, y = SalePrice))
 boxplot(SalePrice~Neighborhood,data=newAmesData)
 ```
+\
+Above box plot shows that neighborhood in Brookside has lower sales price compared to the other neighborhood. On the other hand, neighborhood in CollegeCreek and Somerset have the highest sales price. However, between CollegeCreek and Somerset, Somerset has a higher median price. 
 
 ### Question 7
 
@@ -81,3 +96,10 @@ Create a side-by-side histogram showing the sales prices for the different types
 ```{r, echo=FALSE}
 boxplot(SalePrice~BldgType,data=ames)
 ```
+\
+The above box plot shows that a single-family detached building type has the highest sales compared to the rest of the building type. However, looking close, the median sales price for a single-family detached has the same median price for town house end unit. Not only a single-family detached building type has the highest sales, but, the same building type also has the lowest sales prices according to the above graph. 
+
+Two-family conversion, duplex, and townhouse inside-unit have lower sales price compared to single-family detached and townhouse end-unit. Moreover, these 3 building types have almost the same median price.
+
+Therefore, depending on the budget, two-family conversion, duplex, and townhouse inside-unit have comparatively lower price compared to single-family detached and townhouse end-unit. 
+\
